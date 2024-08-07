@@ -1,15 +1,11 @@
-// 21ÁÙ ~ 28ÁÙ (ÇÃ·¹ÀÌ¾î ±¸Á¶Ã¼) , 114 ~ 131ÁÙ(¹«ÀÎµµ ¿¹¿ÜÃ³¸®) , 464ÁÙ ~ 500ÁÙ(Áö¿ª ÃÊ±âÈ­ ÇÔ¼ö) : ¹®¼®Çü
-// 30 ~ 36ÁÙ ( Áö¿ª ±¸Á¶Ã¼ ),  530 ~ 543ÁÙ (ÇÃ·¹ÀÌ¾î ±¸Á¶Ã¼ ÃÊ±âÈ­) : Á¤Àç¿ø 
-// ³ª¸ÓÁö: ±è¼ºÂù 
-
-#include <stdio.h> // Çì´õ 
+#include <stdio.h> // í—¤ë” 
 #include <stdlib.h>
 #include <conio.h>
 #include <time.h>
 #include <string.h>
 #include <windows.h>
 
-// »ö»óÄÚµå 
+// ìƒ‰ìƒì½”ë“œ 
 #define COLOR_RED      "\x1b[31m"
 #define COLOR_GREEN    "\x1b[32m"
 #define COLOR_YELLOW   "\x1b[33m"
@@ -18,126 +14,126 @@
 #define COLOR_CYAN     "\x1b[36m"
 #define COLOR_NONE    "\x1b[0m"
 
-struct Player { // ÇÃ·¹ÀÌ¾î ±¸Á¶Ã¼ 
-	char name[50]; // ÀÌ¸§ 
-	int num; // ÇÃ·¹ÀÌ¾î ¹øÈ£(0, 1, 2, 3) 
-	int assets; // º¸À¯ ÀÚ»ê 
-	int doubleCount; // ´õºíÀÌ ³ª¿Â È½¼ö ¶Ç´Â ¹«ÀÎµµ Å»Ãâ ¸øÇÑ È½¼ö 
-	int location; // ÇÃ·¹ÀÌ¾î À§Ä¡ 
-	int attractionCount; // ¹«ÀÎµµ º¸À¯ °³¼ö 
+struct Player { // í”Œë ˆì´ì–´ êµ¬ì¡°ì²´ 
+	char name[50]; // ì´ë¦„ 
+	int num; // í”Œë ˆì´ì–´ ë²ˆí˜¸(0, 1, 2, 3) 
+	int assets; // ë³´ìœ  ìì‚° 
+	int doubleCount; // ë”ë¸”ì´ ë‚˜ì˜¨ íšŸìˆ˜ ë˜ëŠ” ë¬´ì¸ë„ íƒˆì¶œ ëª»í•œ íšŸìˆ˜ 
+	int location; // í”Œë ˆì´ì–´ ìœ„ì¹˜ 
+	int attractionCount; // ë¬´ì¸ë„ ë³´ìœ  ê°œìˆ˜ 
 };
 
-struct Zone { // Áö¿ª ±¸Á¶Ã¼ 
-	char name[20]; // Áö¿ª ÀÌ¸§ 
-	struct Player* owner = NULL; // Áö¿ª ÁÖÀÎ Æ÷ÀÎÅÍ 
-	int built; // Áö¿ª »óÅÂ ( 0: ¹Ì°³¹ß, 1: ÅäÁö¸¸±¸ÀÔ, 2~4 º°Àå ºôµù È£ÅÚ) 
-	int toll[4]; // ÅëÇà·á ¹è¿­ ( 0: ±âº», 1~3:  º°ÀåºôµùÈ£ÅÚ) 
-	int cost[4]; // °Ç¼³ºñ¿ë ¹è¿­ ( 0: ¶¥°ª, 1~3 º°ÀåºôµùÈ£ÅÚ) 
+struct Zone { // ì§€ì—­ êµ¬ì¡°ì²´ 
+	char name[20]; // ì§€ì—­ ì´ë¦„ 
+	struct Player* owner = NULL; // ì§€ì—­ ì£¼ì¸ í¬ì¸í„° 
+	int built; // ì§€ì—­ ìƒíƒœ ( 0: ë¯¸ê°œë°œ, 1: í† ì§€ë§Œêµ¬ì…, 2~4 ë³„ì¥ ë¹Œë”© í˜¸í…”) 
+	int toll[4]; // í†µí–‰ë£Œ ë°°ì—´ ( 0: ê¸°ë³¸, 1~3:  ë³„ì¥ë¹Œë”©í˜¸í…”) 
+	int cost[4]; // ê±´ì„¤ë¹„ìš© ë°°ì—´ ( 0: ë•…ê°’, 1~3 ë³„ì¥ë¹Œë”©í˜¸í…”) 
 };
 
-void zone_init(struct Zone* map); // Áö¿ª ÃÊ±âÈ­ÇÏ´Â ÇÔ¼ö
+void zone_init(struct Zone* map); // ì§€ì—­ ì´ˆê¸°í™”í•˜ëŠ” í•¨ìˆ˜
 void player_init(struct Player* players, int playerCount);
-void insertZone(struct Zone* map, int num, char name[], int t0, int t1, int t2, int t3, int c0, int c1, int c2, int c3); // Áö¿ªÀ» map ¹è¿­¿¡ ³Ö¾îÁÖ´Â ÇÔ¼ö 
-void insertZone(struct Zone* map, int num, char name[]); // Áö¿ªÀ» map ¹è¿­¿¡ ³Ö¾îÁÖ´Â ÇÔ¼ö 
-void insertZone(struct Zone* map, int num, char name[], int t0, int c0); // Áö¿ªÀ» map ¹è¿­¿¡ ³Ö¾îÁÖ´Â ÇÔ¼ö 
-int pay_toll(struct Zone* curZone, struct Player* p, struct Zone* map); // »ó´ë¶¥¿¡¼­ ºñ¿ëÁöºÒ ÇÔ¼ö 
-void print_map(struct Player* players, struct Zone* map, int playerCount); // ÀüÃ¼ ¸Ê Ãâ·Â ÇÔ¼ö 
-void interact(struct Zone* curZone, struct Player* p); // °Ç¼³ »óÈ£ÀÛ¿ë ÇÔ¼ö 
-int total_toll(struct Zone* zone); // ÀüÃ¼ ÅëÇà·á °è»ê ÇÔ¼ö
-// curZone : ÇöÀç Áö¿ª ±¸Á¶Ã¼ Æ÷ÀÎÅÍ, map: Zone ±¸Á¶Ã¼ ´ã°íÀÖ´Â ¹è¿­ 
+void insertZone(struct Zone* map, int num, char name[], int t0, int t1, int t2, int t3, int c0, int c1, int c2, int c3); // ì§€ì—­ì„ map ë°°ì—´ì— ë„£ì–´ì£¼ëŠ” í•¨ìˆ˜ 
+void insertZone(struct Zone* map, int num, char name[]); // ì§€ì—­ì„ map ë°°ì—´ì— ë„£ì–´ì£¼ëŠ” í•¨ìˆ˜ 
+void insertZone(struct Zone* map, int num, char name[], int t0, int c0); // ì§€ì—­ì„ map ë°°ì—´ì— ë„£ì–´ì£¼ëŠ” í•¨ìˆ˜ 
+int pay_toll(struct Zone* curZone, struct Player* p, struct Zone* map); // ìƒëŒ€ë•…ì—ì„œ ë¹„ìš©ì§€ë¶ˆ í•¨ìˆ˜ 
+void print_map(struct Player* players, struct Zone* map, int playerCount); // ì „ì²´ ë§µ ì¶œë ¥ í•¨ìˆ˜ 
+void interact(struct Zone* curZone, struct Player* p); // ê±´ì„¤ ìƒí˜¸ì‘ìš© í•¨ìˆ˜ 
+int total_toll(struct Zone* zone); // ì „ì²´ í†µí–‰ë£Œ ê³„ì‚° í•¨ìˆ˜
+// curZone : í˜„ì¬ ì§€ì—­ êµ¬ì¡°ì²´ í¬ì¸í„°, map: Zone êµ¬ì¡°ì²´ ë‹´ê³ ìˆëŠ” ë°°ì—´ 
 
 
 int main(void) {
-	// º¯¼ö ¼±¾ğ 
-	srand(time(NULL)); // ·£´ı ½Ãµå°ª ÃÊ±âÈ­ 
-	int input; // »ç¿ëÀÚ ÀÔ·Â º¯¼ö 
-	char c; // »ç¿ëÀÚ ÀÔ·Â º¯¼ö 
-	int playerCount, LDice, RDice, turn = -1, bankruptcy = 0; // ¿ŞÂÊºÎÅÍ ¼ø¼­´ë·Î ÇÃ·¹ÀÌ¾î ¼ö, ¿ŞÂÊ/¿À¸¥ÂÊ ÁÖ»çÀ§(L, R), ÀÚ½Å Â÷·ÊÀÎ ÇÃ·¹ÀÌ¾îÀÇ ¹øÈ£, ÆÄ»êÇÑ ÇÃ·¹ÀÌ¾î ¼ö(°ÔÀÓÁ¾·á Á¶°Ç °Ë»ç¿¡ ¾²ÀÓ) 
-	struct Player* players; // ÇÃ·¹ÀÌ¾î ±¸Á¶Ã¼ ¹è¿­ 
-	struct Player* p; // ÇöÀç Â÷·ÊÀÎ ÇÃ·¹ÀÌ¾î °¡¸®Å°´Â Æ÷ÀÎÅÍ 
+	// ë³€ìˆ˜ ì„ ì–¸ 
+	srand(time(NULL)); // ëœë¤ ì‹œë“œê°’ ì´ˆê¸°í™” 
+	int input; // ì‚¬ìš©ì ì…ë ¥ ë³€ìˆ˜ 
+	char c; // ì‚¬ìš©ì ì…ë ¥ ë³€ìˆ˜ 
+	int playerCount, LDice, RDice, turn = -1, bankruptcy = 0; // ì™¼ìª½ë¶€í„° ìˆœì„œëŒ€ë¡œ í”Œë ˆì´ì–´ ìˆ˜, ì™¼ìª½/ì˜¤ë¥¸ìª½ ì£¼ì‚¬ìœ„(L, R), ìì‹  ì°¨ë¡€ì¸ í”Œë ˆì´ì–´ì˜ ë²ˆí˜¸, íŒŒì‚°í•œ í”Œë ˆì´ì–´ ìˆ˜(ê²Œì„ì¢…ë£Œ ì¡°ê±´ ê²€ì‚¬ì— ì“°ì„) 
+	struct Player* players; // í”Œë ˆì´ì–´ êµ¬ì¡°ì²´ ë°°ì—´ 
+	struct Player* p; // í˜„ì¬ ì°¨ë¡€ì¸ í”Œë ˆì´ì–´ ê°€ë¦¬í‚¤ëŠ” í¬ì¸í„° 
 	struct Zone map[32];
-	// ¶¥ Á¤º¸ ´ã°íÀÖ´Â 2Â÷¿ø¹è¿­ÀÓ 
-	// ¹«ÀÎµµ: 8, ¿Ã¸²ÇÈ°³ÃÖ: 16, ¼¼°è¿©Çà: 24, Ãâ¹ßÁö: 0 
+	// ë•… ì •ë³´ ë‹´ê³ ìˆëŠ” 2ì°¨ì›ë°°ì—´ì„ 
+	// ë¬´ì¸ë„: 8, ì˜¬ë¦¼í”½ê°œìµœ: 16, ì„¸ê³„ì—¬í–‰: 24, ì¶œë°œì§€: 0 
 	
-	printf("ÇÃ·¹ÀÌ¾î ÀÎ¿ø ¼ö¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä (2~4): ");
+	printf("í”Œë ˆì´ì–´ ì¸ì› ìˆ˜ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš” (2~4): ");
 	scanf("%d", &playerCount);
 	players = (Player*)malloc(sizeof(Player) * playerCount);
 	if(players == NULL) {
-		printf("Æ÷ÀÎÅÍ ÇÒ´ç ½ÇÆĞ");
+		printf("í¬ì¸í„° í• ë‹¹ ì‹¤íŒ¨");
 		exit(1);
 	}
-	// ±İ¾×ºĞ¹è & ÇÃ·¹ÀÌ¾î ÃÊ±âÈ­ 
+	// ê¸ˆì•¡ë¶„ë°° & í”Œë ˆì´ì–´ ì´ˆê¸°í™” 
 	player_init(players, playerCount);
-	//ÀÌ¸§¼³Á¤
+	//ì´ë¦„ì„¤ì •
 	for(int i = 0; i < playerCount; i++) {
-		printf("ÇÃ·¹ÀÌ¾î %d´ÔÀÇ ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä: ", i+1);
+		printf("í”Œë ˆì´ì–´ %dë‹˜ì˜ ì´ë¦„ì„ ì…ë ¥í•´ì£¼ì„¸ìš”: ", i+1);
 		scanf("%s", &(players+i)->name);
 	}
-	//Áö¿ª ÃÊ±âÈ­ 
+	//ì§€ì—­ ì´ˆê¸°í™” 
 	zone_init(map);
-	while(bankruptcy < playerCount - 1) { // °ÔÀÓÁ¾·á Á¶°Ç°Ë»ç ex) ÇÃ·¹ÀÌ¾î ¼ö: 4, ÆÄ»ê: 3 -> ¾ÈÀÇ Á¶°Ç false, while¹® ºüÁ®³ª¿È 
-		turn++; // Â÷·Ê ³Ñ¾î°¨ 
-		turn %= playerCount; // Â÷·Ê ³Ñ¾î°¨ 
+	while(bankruptcy < playerCount - 1) { // ê²Œì„ì¢…ë£Œ ì¡°ê±´ê²€ì‚¬ ex) í”Œë ˆì´ì–´ ìˆ˜: 4, íŒŒì‚°: 3 -> ì•ˆì˜ ì¡°ê±´ false, whileë¬¸ ë¹ ì ¸ë‚˜ì˜´ 
+		turn++; // ì°¨ë¡€ ë„˜ì–´ê° 
+		turn %= playerCount; // ì°¨ë¡€ ë„˜ì–´ê° 
 		system("cls");
 		print_map(players, map, playerCount);
 		p = (players+turn);
 		if(p->assets < 0) continue;
-		if(p->location == 24) { // ¼¼°è¿©Çà Ä­¿¡ ÀÖ´Ù¸é (Æ¯¼öÀÌµ¿ ¿¹¿ÜÃ³¸®) 
+		if(p->location == 24) { // ì„¸ê³„ì—¬í–‰ ì¹¸ì— ìˆë‹¤ë©´ (íŠ¹ìˆ˜ì´ë™ ì˜ˆì™¸ì²˜ë¦¬) 
 			while(true) {
 				int input = -1;
 				while (getchar() != '\n');
-				printf("%s´ÔÀÇ Â÷·ÊÀÔ´Ï´Ù. ÀÌµ¿ÇÏ±â ¿øÇÏ´Â Áö¿ªÀÇ ¹øÈ£¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä. (0~31): ", p->name);
+				printf("%së‹˜ì˜ ì°¨ë¡€ì…ë‹ˆë‹¤. ì´ë™í•˜ê¸° ì›í•˜ëŠ” ì§€ì—­ì˜ ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”. (0~31): ", p->name);
 				scanf("%d", &input);
 				if(input >= 0 && input <= 31 && input != 24) {
 					p->location = input;
 					if(p->location <= 23) {
-						printf("Ãâ¹ßÁö¸¦ °æÀ¯ÇÏ¿© ¿ù±Ş 100¸¸¿øÀ» È¹µæÇÕ´Ï´Ù.\n");
+						printf("ì¶œë°œì§€ë¥¼ ê²½ìœ í•˜ì—¬ ì›”ê¸‰ 100ë§Œì›ì„ íšë“í•©ë‹ˆë‹¤.\n");
 						p->assets += 100;
 					}
 					break;
 				}
 				else {
-					printf("%sÀß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.%s\n", COLOR_RED, COLOR_NONE);
+					printf("%sì˜ëª»ëœ ì…ë ¥ì…ë‹ˆë‹¤.%s\n", COLOR_RED, COLOR_NONE);
 				}
 			}	
 		}
-		else { // ¼¼°è¿©Çà Ä­ÀÌ ¾Æ´Ï¶ó¸é 
-			printf("\n%s´ÔÀÇ Â÷·ÊÀÔ´Ï´Ù. ¾Æ¹« Å°³ª ´­·¯ ÁÖ»çÀ§¸¦ ±¼·ÁÁÖ¼¼¿ä.\n", p->name);
+		else { // ì„¸ê³„ì—¬í–‰ ì¹¸ì´ ì•„ë‹ˆë¼ë©´ 
+			printf("\n%së‹˜ì˜ ì°¨ë¡€ì…ë‹ˆë‹¤. ì•„ë¬´ í‚¤ë‚˜ ëˆŒëŸ¬ ì£¼ì‚¬ìœ„ë¥¼ êµ´ë ¤ì£¼ì„¸ìš”.\n", p->name);
 			int key = getch();
-			if(key == 27) { // ESC Å° ´©¸£¸é °­Á¦Á¾·á(DEBUG) 
+			if(key == 27) { // ESC í‚¤ ëˆ„ë¥´ë©´ ê°•ì œì¢…ë£Œ(DEBUG) 
 				free(players);
 				exit(0);
 			}
 			LDice = rand()%6+1;
 			RDice = rand()%6+1;
-			if(p->location == 8) { // ¹«ÀÎµµ 
+			if(p->location == 8) { // ë¬´ì¸ë„ 
 				if(LDice == RDice) {
-					printf("´õºí! [%d] [%d]\n", LDice, RDice);
-					printf("%s´ÔÀÌ ¹«ÀÎµµ Å»Ãâ¿¡ ¼º°øÇß½À´Ï´Ù!\n", p->name);
+					printf("ë”ë¸”! [%d] [%d]\n", LDice, RDice);
+					printf("%së‹˜ì´ ë¬´ì¸ë„ íƒˆì¶œì— ì„±ê³µí–ˆìŠµë‹ˆë‹¤!\n", p->name);
 					p->doubleCount = 0;
-					RDice += LDice; // ´õºí ¹æÁö¿ë
-					LDice = 0; // ´õºí ¹æÁö¿ë 
+					RDice += LDice; // ë”ë¸” ë°©ì§€ìš©
+					LDice = 0; // ë”ë¸” ë°©ì§€ìš© 
 				}
 				else {
 					 printf("[%d] [%d]\n", LDice, RDice);
 					if(p->doubleCount < 2) {
 						p->doubleCount++;
-						printf("¹«ÀÎµµ Å»Ãâ¿¡ ½ÇÆĞÇß½À´Ï´Ù.. (°æ°úÇÑ ÅÏ: %d)\n", p->doubleCount);
+						printf("ë¬´ì¸ë„ íƒˆì¶œì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.. (ê²½ê³¼í•œ í„´: %d)\n", p->doubleCount);
 						Sleep(1000);
 						continue;
 					}
-					printf("¹«ÀÎµµ¸¦ Å»ÃâÇÕ´Ï´Ù.\n");
+					printf("ë¬´ì¸ë„ë¥¼ íƒˆì¶œí•©ë‹ˆë‹¤.\n");
 					p->doubleCount = 0;
 				}
 				
 			}
-			else { // ¹«ÀÎµµ ¾Æ´Ï¶ó¸é 
+			else { // ë¬´ì¸ë„ ì•„ë‹ˆë¼ë©´ 
 				if(LDice == RDice) {
-					printf("´õºí! [%d] [%d]\n", LDice, RDice);
+					printf("ë”ë¸”! [%d] [%d]\n", LDice, RDice);
 				
 					p->doubleCount++;
-					if(p->doubleCount >= 3) { // ´õºí¼¼¹ø 
-						printf("%s´ÔÀÌ ÁÖ»çÀ§¸¦ ³Ê¹« ¸¹ÀÌ ±¼·Á ¹«ÀÎµµ·Î ³³Ä¡µË´Ï´Ù. ¸Ó¸®Á» ½ÄÈ÷¼¼¿ä\n", p->name);
+					if(p->doubleCount >= 3) { // ë”ë¸”ì„¸ë²ˆ 
+						printf("%së‹˜ì´ ì£¼ì‚¬ìœ„ë¥¼ ë„ˆë¬´ ë§ì´ êµ´ë ¤ ë¬´ì¸ë„ë¡œ ë‚©ì¹˜ë©ë‹ˆë‹¤. ë¨¸ë¦¬ì¢€ ì‹íˆì„¸ìš”\n", p->name);
 						p->location = 8;
 						p->doubleCount = 0;
 						Sleep(1000);
@@ -149,104 +145,104 @@ int main(void) {
 					p->doubleCount = 0;	
 				}
 			}
-			printf("%s´ÔÀÌ %dÄ­ ¾ÕÀ¸·Î ÀüÁøÇÕ´Ï´Ù..\n", p->name, LDice+RDice);
-			p->location += (LDice+RDice); // ÇÃ·¹ÀÌ¾î ÀÌµ¿ 
+			printf("%së‹˜ì´ %dì¹¸ ì•ìœ¼ë¡œ ì „ì§„í•©ë‹ˆë‹¤..\n", p->name, LDice+RDice);
+			p->location += (LDice+RDice); // í”Œë ˆì´ì–´ ì´ë™ 
 		}
 		
 		if(p->location >= 32) {
-			printf("Ãâ¹ßÁö¸¦ °æÀ¯ÇÏ¿© ¿ù±Ş 100¸¸¿øÀ» È¹µæÇÕ´Ï´Ù.\n");
+			printf("ì¶œë°œì§€ë¥¼ ê²½ìœ í•˜ì—¬ ì›”ê¸‰ 100ë§Œì›ì„ íšë“í•©ë‹ˆë‹¤.\n");
 			p->assets += 100;
 			p->location %= 32;
 		}
-		if(p->location == 0) { // Ãâ¹ßÁö µµÂø 
-			printf("Ãâ¹ßÁö¿¡ µµÂøÇß½À´Ï´Ù. º¸³Ê½º·Î 100¸¸¿øÀ» ´õ È¹µæÇÕ´Ï´Ù.\n");
+		if(p->location == 0) { // ì¶œë°œì§€ ë„ì°© 
+			printf("ì¶œë°œì§€ì— ë„ì°©í–ˆìŠµë‹ˆë‹¤. ë³´ë„ˆìŠ¤ë¡œ 100ë§Œì›ì„ ë” íšë“í•©ë‹ˆë‹¤.\n");
 			p->assets += 100;
 		}
-		else if(p->location == 8) { // ¹«ÀÎµµ µµÂø 
-			printf("¹«ÀÎµµ¿¡ µµÂøÇß½À´Ï´Ù..\n");
+		else if(p->location == 8) { // ë¬´ì¸ë„ ë„ì°© 
+			printf("ë¬´ì¸ë„ì— ë„ì°©í–ˆìŠµë‹ˆë‹¤..\n");
 			Sleep(1000);
 			continue;
 		}
-		else if(p->location == 16) { // ¿Ã¸²ÇÈ µµÂø 
-			printf("¿Ã¸²ÇÈÀº ¸¸µéÁö ¾Ê¾Ò´Ù.\n");
+		else if(p->location == 16) { // ì˜¬ë¦¼í”½ ë„ì°© 
+			printf("ì˜¬ë¦¼í”½ì€ ë§Œë“¤ì§€ ì•Šì•˜ë‹¤.\n");
 		}
-		else if(p->location == 24) { // ¼¼°è¿©Çà µµÂø
-			printf("¼¼°è¿©Çà¿¡ µµÂøÇß½À´Ï´Ù! ´ÙÀ½ ÅÏ¿¡ ¿øÇÏ´Â Áö¿ªÀ¸·Î °¥ ¼ö ÀÖ¾î¿ä.\n");
+		else if(p->location == 24) { // ì„¸ê³„ì—¬í–‰ ë„ì°©
+			printf("ì„¸ê³„ì—¬í–‰ì— ë„ì°©í–ˆìŠµë‹ˆë‹¤! ë‹¤ìŒ í„´ì— ì›í•˜ëŠ” ì§€ì—­ìœ¼ë¡œ ê°ˆ ìˆ˜ ìˆì–´ìš”.\n");
 		}
-		else if(p->location == 30) { // ±¹¼¼Ã» µµÂø 
-			printf("±¹¼¼Ã»¿¡ µµÂøÇß½À´Ï´Ù. ÀÚ»êÀÇ 10%%ÀÎ ¼¼±İ %d¸¸¿øÀ» Çå³³ÇÕ´Ï´Ù.\n", (int)(p->assets * 0.1f));
+		else if(p->location == 30) { // êµ­ì„¸ì²­ ë„ì°© 
+			printf("êµ­ì„¸ì²­ì— ë„ì°©í–ˆìŠµë‹ˆë‹¤. ìì‚°ì˜ 10%%ì¸ ì„¸ê¸ˆ %dë§Œì›ì„ í—Œë‚©í•©ë‹ˆë‹¤.\n", (int)(p->assets * 0.1f));
 			p->assets = (int)(p->assets * 0.9f);
 		}
-		else { // ³ª¸ÓÁö (ÀÏ¹İÁö¿ª, °ü±¤Áö) µµÂø 
+		else { // ë‚˜ë¨¸ì§€ (ì¼ë°˜ì§€ì—­, ê´€ê´‘ì§€) ë„ì°© 
 			Zone* curZone = (map+p->location);
-			if(curZone->owner != NULL && curZone->owner != (players+turn)) { // »ó´ë ¶¥ÀÌ¶ó¸é 
-				if(pay_toll(curZone, p, map) == 1) { // ÅëÇà·á ÁöºÒ, ÆÄ»êÇÏ¸é ¾ÈÀÇ Á¶°Ç TRUE 
-					bankruptcy++; // ÆÄ»ê 
+			if(curZone->owner != NULL && curZone->owner != (players+turn)) { // ìƒëŒ€ ë•…ì´ë¼ë©´ 
+				if(pay_toll(curZone, p, map) == 1) { // í†µí–‰ë£Œ ì§€ë¶ˆ, íŒŒì‚°í•˜ë©´ ì•ˆì˜ ì¡°ê±´ TRUE 
+					bankruptcy++; // íŒŒì‚° 
 					Sleep(1000);
 					continue;
 				}
 			}
 			else {
-				printf("%s¿¡ µµÂøÇß½À´Ï´Ù.\n", curZone->name);				
+				printf("%sì— ë„ì°©í–ˆìŠµë‹ˆë‹¤.\n", curZone->name);				
 			}
-			if(curZone->owner == NULL || curZone->owner == (players+turn)) { // ÁÖÀÎ¾ø´Â ¶¥ or ³»¶¥ÀÌ¶ó¸é 
+			if(curZone->owner == NULL || curZone->owner == (players+turn)) { // ì£¼ì¸ì—†ëŠ” ë•… or ë‚´ë•…ì´ë¼ë©´ 
 				int totalToll = total_toll(curZone);
-				if(curZone->cost[1] == 0) { //  °ü±¤Áö¶ó¸é
-					printf("%s(ÇöÀç Áö¿ª Á¤º¸: %s°ü±¤Áö%s ::  ¶¥°ª: %d¸¸¿ø  ::  ÅëÇà·á: %d¸¸¿ø )%s\n", COLOR_CYAN, COLOR_MAGENTA, COLOR_CYAN, curZone->cost[0], totalToll, COLOR_NONE);
+				if(curZone->cost[1] == 0) { //  ê´€ê´‘ì§€ë¼ë©´
+					printf("%s(í˜„ì¬ ì§€ì—­ ì •ë³´: %sê´€ê´‘ì§€%s ::  ë•…ê°’: %dë§Œì›  ::  í†µí–‰ë£Œ: %dë§Œì› )%s\n", COLOR_CYAN, COLOR_MAGENTA, COLOR_CYAN, curZone->cost[0], totalToll, COLOR_NONE);
 				}
-				else { // °ü±¤Áö°¡ ¾Æ´Ï¶ó¸é 
+				else { // ê´€ê´‘ì§€ê°€ ì•„ë‹ˆë¼ë©´ 
 					char temp[30];
 					switch(curZone->built) {
 						case 0:
-							strcpy(temp, "¹Ì°³¹ßÁö´ë");
+							strcpy(temp, "ë¯¸ê°œë°œì§€ëŒ€");
 							break;
 						case 1:
-							strcpy(temp, "ºÎÁö");
+							strcpy(temp, "ë¶€ì§€");
 							break;
 						case 2:
-							strcpy(temp, "º°Àå");
+							strcpy(temp, "ë³„ì¥");
 							break;
 						case 3:
-							strcpy(temp, "ºôµù");
+							strcpy(temp, "ë¹Œë”©");
 							break;
 						case 4:
-							strcpy(temp, "È£ÅÚ");
+							strcpy(temp, "í˜¸í…”");
 							break;
 						default:
 							break;
 					}
-					printf("%s(ÇöÀç Áö¿ª Á¤º¸: %s%s%s :: ¶¥°ª: %d¸¸¿ø  ::  º°Àå °Ç¼³ºñ: %d¸¸¿ø  ::  ºôµù °Ç¼³ºñ: %d¸¸¿ø  ::  È£ÅÚ °Ç¼³ºñ: %d¸¸¿ø  ::  %sÅëÇà·á: %d¸¸¿ø%s %s)%s\n", COLOR_CYAN, COLOR_MAGENTA, temp, COLOR_CYAN, curZone->cost[0], curZone->cost[1], curZone->cost[2], curZone->cost[3], COLOR_GREEN, totalToll, COLOR_NONE, COLOR_CYAN, COLOR_NONE);
+					printf("%s(í˜„ì¬ ì§€ì—­ ì •ë³´: %s%s%s :: ë•…ê°’: %dë§Œì›  ::  ë³„ì¥ ê±´ì„¤ë¹„: %dë§Œì›  ::  ë¹Œë”© ê±´ì„¤ë¹„: %dë§Œì›  ::  í˜¸í…” ê±´ì„¤ë¹„: %dë§Œì›  ::  %sí†µí–‰ë£Œ: %dë§Œì›%s %s)%s\n", COLOR_CYAN, COLOR_MAGENTA, temp, COLOR_CYAN, curZone->cost[0], curZone->cost[1], curZone->cost[2], curZone->cost[3], COLOR_GREEN, totalToll, COLOR_NONE, COLOR_CYAN, COLOR_NONE);
 				}
-				interact(curZone, p); // °Ç¼³ »óÈ£ÀÛ¿ë 
+				interact(curZone, p); // ê±´ì„¤ ìƒí˜¸ì‘ìš© 
 			}
 		}
 		Sleep(1000);
 		if(LDice == RDice) turn--;
 	}
-	// ¿ì½ÂÀÚ °Ë»ç 
+	// ìš°ìŠ¹ì ê²€ì‚¬ 
 	int i;
 	for(i = 0; i < playerCount; i++) {
 		if(players[i].assets > 0) break;
 	}
-	printf("\n___________________\n°ÔÀÓ Á¾·á! %s´ÔÀÇ ½Â¸®!", players[i]);
+	printf("\n___________________\nê²Œì„ ì¢…ë£Œ! %së‹˜ì˜ ìŠ¹ë¦¬!", players[i]);
 	free(players);
 }
 
-void print_map(struct Player* players, struct Zone* map, int playerCount) { //ÀüÃ¼ ¸Ê Ãâ·Â ÇÔ¼ö (À§¿¡¼­ºÎÅÍ Â÷·Ê´ë·Î Ãâ·Â) 
-	// 16 ~ 24 Ãâ·Â 
-	printf("¦£¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¤	%sÇÃ·¹ÀÌ¾î1(%s)#%s º¸À¯ ÀÚ»ê: %d¸¸¿ø, ÇöÀç À§Ä¡: %s\n", COLOR_RED, players[0].name, COLOR_NONE, players[0].assets, map[players[0].location].name);
-	printf("¦¢        ¦¢        ¦¢        ¦¢        ¦¢        ¦¢        ¦¢        ¦¢        ¦¢        ¦¢	%sÇÃ·¹ÀÌ¾î2(%s)#%s º¸À¯ ÀÚ»ê: %d¸¸¿ø, ÇöÀç À§Ä¡: %s\n", COLOR_BLUE, players[1].name, COLOR_NONE, players[1].assets, map[players[1].location].name);
-	//printf("¦¢ ¿Ã¸²ÇÈ ¦¢ ÇÁ¶óÇÏ ¦¢ ÇªÄÏ   ¦¢ º£¸¦¸° ¦¢¸óÆ®¸®¿Ã¦¢¸ğ½ºÅ©¹Ù¦¢ Á¦³×¹Ù ¦¢  ·Î¸¶  ¦¢¼¼°è¿©Çà¦¢\n");
+void print_map(struct Player* players, struct Zone* map, int playerCount) { //ì „ì²´ ë§µ ì¶œë ¥ í•¨ìˆ˜ (ìœ„ì—ì„œë¶€í„° ì°¨ë¡€ëŒ€ë¡œ ì¶œë ¥) 
+	// 16 ~ 24 ì¶œë ¥ 
+	printf("â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”	%sí”Œë ˆì´ì–´1(%s)#%s ë³´ìœ  ìì‚°: %dë§Œì›, í˜„ì¬ ìœ„ì¹˜: %s\n", COLOR_RED, players[0].name, COLOR_NONE, players[0].assets, map[players[0].location].name);
+	printf("â”‚        â”‚        â”‚        â”‚        â”‚        â”‚        â”‚        â”‚        â”‚        â”‚	%sí”Œë ˆì´ì–´2(%s)#%s ë³´ìœ  ìì‚°: %dë§Œì›, í˜„ì¬ ìœ„ì¹˜: %s\n", COLOR_BLUE, players[1].name, COLOR_NONE, players[1].assets, map[players[1].location].name);
+	//printf("â”‚ ì˜¬ë¦¼í”½ â”‚ í”„ë¼í•˜ â”‚ í‘¸ì¼“   â”‚ ë² ë¥¼ë¦° â”‚ëª¬íŠ¸ë¦¬ì˜¬â”‚ëª¨ìŠ¤í¬ë°”â”‚ ì œë„¤ë°” â”‚  ë¡œë§ˆ  â”‚ì„¸ê³„ì—¬í–‰â”‚\n");
 	for(int i = 16; i <= 24; i++) {
-		printf("¦¢%8s", map[i].name);
+		printf("â”‚%8s", map[i].name);
 	}
 	if(playerCount >= 3)
-		printf("¦¢	%sÇÃ·¹ÀÌ¾î3(%s)#%s º¸À¯ ÀÚ»ê: %d¸¸¿ø, ÇöÀç À§Ä¡: %s\n", COLOR_YELLOW, players[2].name, COLOR_NONE, players[2].assets, map[players[2].location].name);
+		printf("â”‚	%sí”Œë ˆì´ì–´3(%s)#%s ë³´ìœ  ìì‚°: %dë§Œì›, í˜„ì¬ ìœ„ì¹˜: %s\n", COLOR_YELLOW, players[2].name, COLOR_NONE, players[2].assets, map[players[2].location].name);
 	else
-		printf("¦¢\n");
+		printf("â”‚\n");
 		
 	for(int i = 16; i <= 24; i++) {
-		printf("¦¢");
+		printf("â”‚");
 		if(map[i].owner == NULL) {
 			printf("%s", COLOR_NONE);
 		}
@@ -261,16 +257,16 @@ void print_map(struct Player* players, struct Zone* map, int playerCount) { //Àü
 		printf("  [%d]%s   ", map[i].built, COLOR_NONE);
 	}
 	if(playerCount >= 4)
-		printf("¦¢	%sÇÃ·¹ÀÌ¾î4(%s)#%s º¸À¯ ÀÚ»ê: %d¸¸¿ø, ÇöÀç À§Ä¡: %s\n", COLOR_GREEN, players[3].name, COLOR_NONE, players[3].assets, map[players[3].location].name);
+		printf("â”‚	%sí”Œë ˆì´ì–´4(%s)#%s ë³´ìœ  ìì‚°: %dë§Œì›, í˜„ì¬ ìœ„ì¹˜: %s\n", COLOR_GREEN, players[3].name, COLOR_NONE, players[3].assets, map[players[3].location].name);
 	else
-		printf("¦¢\n");
+		printf("â”‚\n");
 	
-	// 15, 25 Ãâ·Â 
-	printf("¦§¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦«¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦«¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦©\n");
-	printf("¦¢        ¦¢%62s¦¢        ¦¢\n", "");
-	printf("¦¢%8s¦¢%62s¦¢%8s¦¢\n", map[15].name, "", map[25].name);
+	// 15, 25 ì¶œë ¥ 
+	printf("â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”¤\n");
+	printf("â”‚        â”‚%62sâ”‚        â”‚\n", "");
+	printf("â”‚%8sâ”‚%62sâ”‚%8sâ”‚\n", map[15].name, "", map[25].name);
 	
-	printf("¦¢");
+	printf("â”‚");
 	if(map[15].owner == NULL) {
 		printf("%s", COLOR_NONE);
 	}
@@ -282,7 +278,7 @@ void print_map(struct Player* players, struct Zone* map, int playerCount) { //Àü
 		printf("%s", COLOR_YELLOW);
 	else if (map[15].owner->num == 3)
 		printf("%s", COLOR_GREEN);
-	printf("  [%d]%s   ¦¢%62s¦¢  ", map[15].built, COLOR_NONE, "");
+	printf("  [%d]%s   â”‚%62sâ”‚  ", map[15].built, COLOR_NONE, "");
 	if(map[25].owner == NULL) {
 		printf("%s", COLOR_NONE);
 	}
@@ -294,14 +290,14 @@ void print_map(struct Player* players, struct Zone* map, int playerCount) { //Àü
 		printf("%s", COLOR_YELLOW);
 	else if (map[25].owner->num == 3)
 		printf("%s", COLOR_GREEN);
-	printf("[%d]%s   ¦¢\n", map[25].built, COLOR_NONE);	
-	// 9 ~ 14, 25 ~ 31 Ãâ·Â
+	printf("[%d]%s   â”‚\n", map[25].built, COLOR_NONE);	
+	// 9 ~ 14, 25 ~ 31 ì¶œë ¥
 	for(int i = 14; i >= 9; i--) {
-		printf("¦§¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦©%62s¦§¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦©\n", "");
-		printf("¦¢        ¦¢%62s¦¢        ¦¢\n", "");
-		printf("¦¢%8s¦¢%62s¦¢%8s¦¢\n", map[i].name, "", map[40-i].name);
+		printf("â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”¤%62sâ”œâ”€â”€â”€â”€â”€â”€â”€â”€â”¤\n", "");
+		printf("â”‚        â”‚%62sâ”‚        â”‚\n", "");
+		printf("â”‚%8sâ”‚%62sâ”‚%8sâ”‚\n", map[i].name, "", map[40-i].name);
 		
-		printf("¦¢");
+		printf("â”‚");
 		if(map[i].owner == NULL) {
 			printf("%s", COLOR_NONE);
 		}
@@ -313,7 +309,7 @@ void print_map(struct Player* players, struct Zone* map, int playerCount) { //Àü
 			printf("%s", COLOR_YELLOW);
 		else if (map[i].owner->num == 3)
 			printf("%s", COLOR_GREEN);
-		printf("  [%d]%s   ¦¢%62s¦¢  ", map[i].built, COLOR_NONE, "");
+		printf("  [%d]%s   â”‚%62sâ”‚  ", map[i].built, COLOR_NONE, "");
 		if(map[40-i].owner == NULL) {
 			printf("%s", COLOR_NONE);
 		}
@@ -325,19 +321,19 @@ void print_map(struct Player* players, struct Zone* map, int playerCount) { //Àü
 			printf("%s", COLOR_YELLOW);
 		else if (map[40-i].owner->num == 3)
 			printf("%s", COLOR_GREEN);
-		printf("[%d]%s   ¦¢\n", map[40-i].built, COLOR_NONE);	
+		printf("[%d]%s   â”‚\n", map[40-i].built, COLOR_NONE);	
 	}
 	
-	 // 0 ~ 8 Ãâ·Â 
-	printf("¦§¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦«¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¨¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦«¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦©\n");
-	printf("¦¢        ¦¢        ¦¢        ¦¢        ¦¢        ¦¢        ¦¢        ¦¢        ¦¢        ¦¢\n");
-	//printf("¦¢ ¿Ã¸²ÇÈ ¦¢ ÇÁ¶óÇÏ ¦¢ ÇªÄÏ   ¦¢ º£¸¦¸° ¦¢¸óÆ®¸®¿Ã¦¢¸ğ½ºÅ©¹Ù¦¢ Á¦³×¹Ù ¦¢  ·Î¸¶  ¦¢¼¼°è¿©Çà¦¢\n");
+	 // 0 ~ 8 ì¶œë ¥ 
+	printf("â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”¤\n");
+	printf("â”‚        â”‚        â”‚        â”‚        â”‚        â”‚        â”‚        â”‚        â”‚        â”‚\n");
+	//printf("â”‚ ì˜¬ë¦¼í”½ â”‚ í”„ë¼í•˜ â”‚ í‘¸ì¼“   â”‚ ë² ë¥¼ë¦° â”‚ëª¬íŠ¸ë¦¬ì˜¬â”‚ëª¨ìŠ¤í¬ë°”â”‚ ì œë„¤ë°” â”‚  ë¡œë§ˆ  â”‚ì„¸ê³„ì—¬í–‰â”‚\n");
 	for(int i = 8; i >= 0; i--) {
-		printf("¦¢%8s", map[i].name);
+		printf("â”‚%8s", map[i].name);
 	}
-	printf("¦¢\n");
+	printf("â”‚\n");
 	for(int i = 8; i >= 0; i--) {
-		printf("¦¢");
+		printf("â”‚");
 		if(map[i].owner == NULL) {
 			printf("%s", COLOR_NONE);
 		}
@@ -351,17 +347,17 @@ void print_map(struct Player* players, struct Zone* map, int playerCount) { //Àü
 			printf("%s", COLOR_GREEN);
 		printf("  [%d]%s   ", map[i].built, COLOR_NONE);
 	}
-	printf("¦¢\n");
-	printf("¦¦¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦ª¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¥\n\n");
+	printf("â”‚\n");
+	printf("â””â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”˜\n\n");
 	
 }
 
-int total_toll(struct Zone* zone) { // ÀüÃ¼ ÅëÇà·á ¹İÈ¯ÇÏ´Â ÇÔ¼ö 
+int total_toll(struct Zone* zone) { // ì „ì²´ í†µí–‰ë£Œ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜ 
 	int totalToll = 0;
 	for(int i = 0; i < zone->built; i++) {
 		totalToll += zone->toll[i];
 	}
-	if(zone->cost[1] == 0 && zone->owner != NULL) { // °ü±¤Áö °³¼ö¿¡ µû¶ó ÅëÇà·á 2¹è¾¿ »ó½Â 
+	if(zone->cost[1] == 0 && zone->owner != NULL) { // ê´€ê´‘ì§€ ê°œìˆ˜ì— ë”°ë¼ í†µí–‰ë£Œ 2ë°°ì”© ìƒìŠ¹ 
 		for(int i = 1; i < zone->owner->attractionCount; i++) { 
 			totalToll *= 2;
 		}
@@ -369,16 +365,16 @@ int total_toll(struct Zone* zone) { // ÀüÃ¼ ÅëÇà·á ¹İÈ¯ÇÏ´Â ÇÔ¼ö
 	return totalToll;
 }
 
-int pay_toll(struct Zone* curZone, struct Player* p, struct Zone* map) { // ÅëÇà·á ÁöºÒÇÏ´Â ÇÔ¼ö (ÆÄ»êÇÏ¸é 1 ¹İÈ¯ ¾Æ´Ï¸é 0 ¹İÈ¯) 
+int pay_toll(struct Zone* curZone, struct Player* p, struct Zone* map) { // í†µí–‰ë£Œ ì§€ë¶ˆí•˜ëŠ” í•¨ìˆ˜ (íŒŒì‚°í•˜ë©´ 1 ë°˜í™˜ ì•„ë‹ˆë©´ 0 ë°˜í™˜) 
 	char c = ' ';
 	int totalToll = total_toll(curZone);
-	printf("%s´ÔÀÇ ¼ÒÀ¯ÀÎ %s¿¡ µµÂøÇß½À´Ï´Ù!\n", curZone->owner->name, curZone->name);
+	printf("%së‹˜ì˜ ì†Œìœ ì¸ %sì— ë„ì°©í–ˆìŠµë‹ˆë‹¤!\n", curZone->owner->name, curZone->name);
 	curZone->owner->assets += totalToll;
 	p->assets -= totalToll;
-	printf("%sÅëÇà·á %d¸¸¿øÀ» ÁöºÒÇÕ´Ï´Ù.. (ÇöÀç º¸À¯ ÀÚ»ê: %d¸¸¿ø) %s\n", COLOR_YELLOW, totalToll, p->assets, COLOR_NONE);
+	printf("%sí†µí–‰ë£Œ %dë§Œì›ì„ ì§€ë¶ˆí•©ë‹ˆë‹¤.. (í˜„ì¬ ë³´ìœ  ìì‚°: %dë§Œì›) %s\n", COLOR_YELLOW, totalToll, p->assets, COLOR_NONE);
 	
-	if(p->assets < 0) { // º¸À¯ÀÚ»ê ¸¶ÀÌ³Ê½º¸é ÆÄ»ê 
-		printf("%s%s´ÔÀÌ ÆÄ»êÇß½À´Ï´Ù.%s\n", COLOR_RED, p->name, COLOR_NONE);
+	if(p->assets < 0) { // ë³´ìœ ìì‚° ë§ˆì´ë„ˆìŠ¤ë©´ íŒŒì‚° 
+		printf("%s%së‹˜ì´ íŒŒì‚°í–ˆìŠµë‹ˆë‹¤.%s\n", COLOR_RED, p->name, COLOR_NONE);
 		for(int i = 0; i <= 31; i++) {
 			if(map[i].owner == p) {
 				map[i].built = 0;
@@ -387,20 +383,20 @@ int pay_toll(struct Zone* curZone, struct Player* p, struct Zone* map) { // ÅëÇà
 		}
 		return 1;
 	}
-	if(curZone->cost[1] == 0) return 0; // °ü±¤Áö´Â ÀÎ¼ö ºÒ°¡´É 
+	if(curZone->cost[1] == 0) return 0; // ê´€ê´‘ì§€ëŠ” ì¸ìˆ˜ ë¶ˆê°€ëŠ¥ 
 	
-	int takeOver = 0; // ÀÎ¼öºñ¿ë 
+	int takeOver = 0; // ì¸ìˆ˜ë¹„ìš© 
 	for(int i = 0; i < curZone->built; i++) {
 		takeOver += curZone->cost[i]*2;
 	}
 	if(p->assets >= takeOver) {
 		while (getchar() != '\n');
-		printf("%sÀ»(¸¦) ÀÎ¼öÇÏ½Ã°Ú½À´Ï±î? (ÀÎ¼öºñ¿ë: %d¸¸¿ø) (ÀÎ¼öÇÏ·Á¸é y / Y): ", curZone->name, takeOver);
+		printf("%sì„(ë¥¼) ì¸ìˆ˜í•˜ì‹œê² ìŠµë‹ˆê¹Œ? (ì¸ìˆ˜ë¹„ìš©: %dë§Œì›) (ì¸ìˆ˜í•˜ë ¤ë©´ y / Y): ", curZone->name, takeOver);
 		scanf("%c", &c);				
 		if(c == 'Y' || c == 'y') {
 			p->assets -= takeOver;
 			curZone->owner = p;
-			printf("%sÀÎ¼ö¿¡ ¼º°øÇß½À´Ï´Ù! (ÇöÀç º¸À¯ ÀÚ»ê: %d¸¸¿ø) %s\n", COLOR_GREEN, p->assets, COLOR_NONE);
+			printf("%sì¸ìˆ˜ì— ì„±ê³µí–ˆìŠµë‹ˆë‹¤! (í˜„ì¬ ë³´ìœ  ìì‚°: %dë§Œì›) %s\n", COLOR_GREEN, p->assets, COLOR_NONE);
 		}
 	}
 	return 0;
@@ -410,40 +406,40 @@ void interact(struct Zone* curZone, struct Player* p) {
 	int input;
 	while(true) {
 		input = -2;
-		if(curZone->cost[1] == 0) { // °ü±¤Áö¶ó¸é 
+		if(curZone->cost[1] == 0) { // ê´€ê´‘ì§€ë¼ë©´ 
 			while (getchar() != '\n');
-			printf("ÁøÇàÇÒ Çàµ¿À» ¼±ÅÃÇØÁÖ¼¼¿ä. (ÅÏ Á¾·áÇÏ±â: -1, °ü±¤Áö ±¸ÀÔ: 0): ");
+			printf("ì§„í–‰í•  í–‰ë™ì„ ì„ íƒí•´ì£¼ì„¸ìš”. (í„´ ì¢…ë£Œí•˜ê¸°: -1, ê´€ê´‘ì§€ êµ¬ì…: 0): ");
 			scanf("%d", &input);
 			if(input == -1) break;
 			if(input == 0) {
 				if(input < curZone->built) {
-					printf("%s°ü±¤Áö°¡ ÀÌ¹Ì ±¸¸ÅµÇ¾ú½À´Ï´Ù. %s\n", COLOR_RED, COLOR_NONE);
+					printf("%sê´€ê´‘ì§€ê°€ ì´ë¯¸ êµ¬ë§¤ë˜ì—ˆìŠµë‹ˆë‹¤. %s\n", COLOR_RED, COLOR_NONE);
 				}
 				else {
 					if(curZone->cost[0] > p->assets) {
-						printf("%sº¸À¯ ÀÚ»êÀÌ ºÎÁ·ÇÕ´Ï´Ù. (°Ç¼³ ºñ¿ë: %d¸¸¿ø, ÇöÀç º¸À¯ ÀÚ»ê: %d¸¸¿ø) %s\n", COLOR_RED, curZone->cost[0], p->assets, COLOR_NONE);
+						printf("%së³´ìœ  ìì‚°ì´ ë¶€ì¡±í•©ë‹ˆë‹¤. (ê±´ì„¤ ë¹„ìš©: %dë§Œì›, í˜„ì¬ ë³´ìœ  ìì‚°: %dë§Œì›) %s\n", COLOR_RED, curZone->cost[0], p->assets, COLOR_NONE);
 					}
 					else {
 						p->assets -= curZone->cost[0];
 						curZone->built = 1;
 						curZone->owner = p;
 						p->attractionCount += 1;
-						printf("%s°Ç¼³¿¡ ¼º°øÇß½À´Ï´Ù! (°Ç¼³ ºñ¿ë: %d¸¸¿ø, ÇöÀç º¸À¯ ÀÚ»ê: %d¸¸¿ø, ÇöÀç ÅëÇà·á: %d¸¸¿ø(°ü±¤Áö º¸³Ê½º - ³» °ü±¤Áö ¼ö: %d°³)%s\n", COLOR_GREEN, curZone->cost[0], p->assets, 40*p->attractionCount, p->attractionCount, COLOR_NONE);
+						printf("%sê±´ì„¤ì— ì„±ê³µí–ˆìŠµë‹ˆë‹¤! (ê±´ì„¤ ë¹„ìš©: %dë§Œì›, í˜„ì¬ ë³´ìœ  ìì‚°: %dë§Œì›, í˜„ì¬ í†µí–‰ë£Œ: %dë§Œì›(ê´€ê´‘ì§€ ë³´ë„ˆìŠ¤ - ë‚´ ê´€ê´‘ì§€ ìˆ˜: %dê°œ)%s\n", COLOR_GREEN, curZone->cost[0], p->assets, 40*p->attractionCount, p->attractionCount, COLOR_NONE);
 					}
 				}	
 			}
 			else {
-				printf("%sÀß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.%s\n", COLOR_RED, COLOR_NONE);
+				printf("%sì˜ëª»ëœ ì…ë ¥ì…ë‹ˆë‹¤.%s\n", COLOR_RED, COLOR_NONE);
 			}
 		}
-		else { // ÀÏ¹İ Áö¿ªÀÌ¶ó¸é  
+		else { // ì¼ë°˜ ì§€ì—­ì´ë¼ë©´  
 			while (getchar() != '\n');
-			printf("ÁøÇàÇÒ Çàµ¿À» ¼±ÅÃÇØÁÖ¼¼¿ä. (ÅÏ Á¾·áÇÏ±â: -1, ¶¥ ±¸ÀÔ: 0, º°Àå °Ç¼³: 1, ºôµù °Ç¼³: 2, È£ÅÚ °Ç¼³: 3): ");
+			printf("ì§„í–‰í•  í–‰ë™ì„ ì„ íƒí•´ì£¼ì„¸ìš”. (í„´ ì¢…ë£Œí•˜ê¸°: -1, ë•… êµ¬ì…: 0, ë³„ì¥ ê±´ì„¤: 1, ë¹Œë”© ê±´ì„¤: 2, í˜¸í…” ê±´ì„¤: 3): ");
 			scanf("%d", &input);
 			if(input == -1) break;
 			if(input >= 0 && input <= 3) {
 				if(input < curZone->built) {
-					printf("%sÀÌ¹Ì °Ç¼³µÈ ´Ü°èÀÔ´Ï´Ù. %s\n", COLOR_RED, COLOR_NONE);
+					printf("%sì´ë¯¸ ê±´ì„¤ëœ ë‹¨ê³„ì…ë‹ˆë‹¤. %s\n", COLOR_RED, COLOR_NONE);
 				}
 				else {
 					int totalCost = 0;
@@ -452,59 +448,59 @@ void interact(struct Zone* curZone, struct Player* p) {
 						totalCost += curZone->cost[i];
 					}
 					if(totalCost > p->assets) {
-						printf("%sº¸À¯ ÀÚ»êÀÌ ºÎÁ·ÇÕ´Ï´Ù. (°Ç¼³ ºñ¿ë: %d¸¸¿ø, ÇöÀç º¸À¯ ÀÚ»ê: %d¸¸¿ø) %s\n", COLOR_RED, totalCost, p->assets, COLOR_NONE);
+						printf("%së³´ìœ  ìì‚°ì´ ë¶€ì¡±í•©ë‹ˆë‹¤. (ê±´ì„¤ ë¹„ìš©: %dë§Œì›, í˜„ì¬ ë³´ìœ  ìì‚°: %dë§Œì›) %s\n", COLOR_RED, totalCost, p->assets, COLOR_NONE);
 					}
 					else {
 						p->assets -= totalCost;
 						curZone->built = input+1;
 						curZone->owner = p;
-						printf("%s°Ç¼³¿¡ ¼º°øÇß½À´Ï´Ù! (°Ç¼³ ºñ¿ë: %d¸¸¿ø, ÇöÀç º¸À¯ ÀÚ»ê: %d¸¸¿ø, ÇöÀç ÅëÇà·á: %d¸¸¿ø)%s\n", COLOR_GREEN, totalCost, p->assets, total_toll(curZone), COLOR_NONE);
+						printf("%sê±´ì„¤ì— ì„±ê³µí–ˆìŠµë‹ˆë‹¤! (ê±´ì„¤ ë¹„ìš©: %dë§Œì›, í˜„ì¬ ë³´ìœ  ìì‚°: %dë§Œì›, í˜„ì¬ í†µí–‰ë£Œ: %dë§Œì›)%s\n", COLOR_GREEN, totalCost, p->assets, total_toll(curZone), COLOR_NONE);
 					}
 				}	
 			}
 			else {
-				printf("%sÀß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.%s\n", COLOR_RED, COLOR_NONE);
+				printf("%sì˜ëª»ëœ ì…ë ¥ì…ë‹ˆë‹¤.%s\n", COLOR_RED, COLOR_NONE);
 			}
 		}
 	}
 }
 
-void zone_init(struct Zone* map) { // Áö¿ª ÃÊ±âÈ­ ÇÔ¼ö 
-	insertZone(map, 0, "Ãâ¹ßÁö");
-	insertZone(map, 1, "¹æÄÛ", 1, 2, 9, 25, 5, 5, 15, 25); // ±âº»ÅëÇà·á º°Àå ºôµù È£ÅÚ ¶¥°ª º°Àå°Ç¼³ ºôµù°Ç¼³ È£ÅÚ°Ç¼³
-	insertZone(map, 2, "Å¸ÀÌº£ÀÌ", 1, 2, 9, 25, 5, 5, 15, 25);
-	insertZone(map, 3, "º£ÀÌÂ¡", 2, 2, 18, 35, 8, 5, 15, 25);
-	insertZone(map, 4, "¸¶´Ò¶ó", 2, 2, 18, 35, 8, 5, 15, 25);
-	insertZone(map, 5, "µ¶µµ", 40, 20);
-	insertZone(map, 6, "µÎ¹ÙÀÌ", 3, 3, 27, 45, 10, 5, 15, 25);
-	insertZone(map, 7,"Ä«ÀÌ·Î", 3, 3, 27, 45, 10, 5, 15, 25);
-	insertZone(map, 8, "¹«ÀÎµµ");
+void zone_init(struct Zone* map) { // ì§€ì—­ ì´ˆê¸°í™” í•¨ìˆ˜ 
+	insertZone(map, 0, "ì¶œë°œì§€");
+	insertZone(map, 1, "ë°©ì½•", 1, 2, 9, 25, 5, 5, 15, 25); // ê¸°ë³¸í†µí–‰ë£Œ ë³„ì¥ ë¹Œë”© í˜¸í…” ë•…ê°’ ë³„ì¥ê±´ì„¤ ë¹Œë”©ê±´ì„¤ í˜¸í…”ê±´ì„¤
+	insertZone(map, 2, "íƒ€ì´ë² ì´", 1, 2, 9, 25, 5, 5, 15, 25);
+	insertZone(map, 3, "ë² ì´ì§•", 2, 2, 18, 35, 8, 5, 15, 25);
+	insertZone(map, 4, "ë§ˆë‹ë¼", 2, 2, 18, 35, 8, 5, 15, 25);
+	insertZone(map, 5, "ë…ë„", 40, 20);
+	insertZone(map, 6, "ë‘ë°”ì´", 3, 3, 27, 45, 10, 5, 15, 25);
+	insertZone(map, 7,"ì¹´ì´ë¡œ", 3, 3, 27, 45, 10, 5, 15, 25);
+	insertZone(map, 8, "ë¬´ì¸ë„");
 	//
-	insertZone(map, 9, "¹ß¸®", 4, 6, 45, 75, 16, 10, 30, 50);
-	insertZone(map, 10, "µµÄì", 4, 6, 45, 75, 16, 10, 30, 50);
-	insertZone(map, 11, "½Ãµå´Ï", 5, 7, 50, 85, 18, 10, 30, 50);
-	insertZone(map, 12, "ÄÚÆæÇÏ°Õ", 5, 7, 50, 85, 18, 10, 30, 50);
-	insertZone(map, 13, "ÇÏ¿ÍÀÌ", 40, 20);
-	insertZone(map, 14, "»óÆÄ¿ï·Î", 6, 8, 55, 100, 20, 10, 30, 50);
-	insertZone(map, 15, "Äù¹é", 6, 8, 55, 100, 20, 10, 30, 50);
-	insertZone(map, 16, "¿Ã¸²ÇÈ");
+	insertZone(map, 9, "ë°œë¦¬", 4, 6, 45, 75, 16, 10, 30, 50);
+	insertZone(map, 10, "ë„ì¿„", 4, 6, 45, 75, 16, 10, 30, 50);
+	insertZone(map, 11, "ì‹œë“œë‹ˆ", 5, 7, 50, 85, 18, 10, 30, 50);
+	insertZone(map, 12, "ì½”íœí•˜ê²", 5, 7, 50, 85, 18, 10, 30, 50);
+	insertZone(map, 13, "í•˜ì™€ì´", 40, 20);
+	insertZone(map, 14, "ìƒíŒŒìš¸ë¡œ", 6, 8, 55, 100, 20, 10, 30, 50);
+	insertZone(map, 15, "í€˜ë°±", 6, 8, 55, 100, 20, 10, 30, 50);
+	insertZone(map, 16, "ì˜¬ë¦¼í”½");
 	//
-	insertZone(map, 17, "ÇÁ¶óÇÏ", 40, 20);
-	insertZone(map, 18, "ÇªÄÏ", 7, 10, 70, 100, 22, 15, 45, 75);
-	insertZone(map, 19, "º£¸¦¸°", 7, 10, 70, 100, 22, 15, 45, 75);
-	insertZone(map, 20, "¸óÆ®¸®¿Ã", 8, 12, 80, 110, 24, 15, 45, 75);
-	insertZone(map, 21, "¸ğ½ºÅ©¹Ù", 8, 12, 80, 110, 24, 15, 45, 75);
-	insertZone(map, 22, "Á¦³×¹Ù", 9, 14, 90, 120, 26, 15, 45, 75);
-	insertZone(map, 23, "·Î¸¶", 9, 14, 90, 120, 26, 15, 45, 75);
-	insertZone(map, 24, "¼¼°è¿©Çà");
+	insertZone(map, 17, "í”„ë¼í•˜", 40, 20);
+	insertZone(map, 18, "í‘¸ì¼“", 7, 10, 70, 100, 22, 15, 45, 75);
+	insertZone(map, 19, "ë² ë¥¼ë¦°", 7, 10, 70, 100, 22, 15, 45, 75);
+	insertZone(map, 20, "ëª¬íŠ¸ë¦¬ì˜¬", 8, 12, 80, 110, 24, 15, 45, 75);
+	insertZone(map, 21, "ëª¨ìŠ¤í¬ë°”", 8, 12, 80, 110, 24, 15, 45, 75);
+	insertZone(map, 22, "ì œë„¤ë°”", 9, 14, 90, 120, 26, 15, 45, 75);
+	insertZone(map, 23, "ë¡œë§ˆ", 9, 14, 90, 120, 26, 15, 45, 75);
+	insertZone(map, 24, "ì„¸ê³„ì—¬í–‰");
 	//
-	insertZone(map, 25, "Å¸ÀÌÆ¼", 40, 20);
-	insertZone(map, 26, "·±´ø", 10, 15, 100, 130, 30, 20, 60, 100);
-	insertZone(map, 27, "ÆÄ¸®", 10, 15, 100, 130, 30, 20, 60, 100);
-	insertZone(map, 28, "¸¶µå¸®µå", 11, 18, 110, 140, 35, 20, 60, 100);
-	insertZone(map, 29, "´º¿å", 11, 18, 110, 140, 35, 20, 60, 100);
-	insertZone(map, 30, "±¹¼¼Ã»");
-	insertZone(map, 31, "¼­¿ï", 15, 20, 130, 200, 50, 30, 80, 120);
+	insertZone(map, 25, "íƒ€ì´í‹°", 40, 20);
+	insertZone(map, 26, "ëŸ°ë˜", 10, 15, 100, 130, 30, 20, 60, 100);
+	insertZone(map, 27, "íŒŒë¦¬", 10, 15, 100, 130, 30, 20, 60, 100);
+	insertZone(map, 28, "ë§ˆë“œë¦¬ë“œ", 11, 18, 110, 140, 35, 20, 60, 100);
+	insertZone(map, 29, "ë‰´ìš•", 11, 18, 110, 140, 35, 20, 60, 100);
+	insertZone(map, 30, "êµ­ì„¸ì²­");
+	insertZone(map, 31, "ì„œìš¸", 15, 20, 130, 200, 50, 30, 80, 120);
 }
 
 void insertZone(struct Zone* map, int num, char name[], int t0, int t1, int t2, int t3, int c0, int c1, int c2, int c3) {
